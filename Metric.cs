@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barnacle
 {
+    [Serializable]
     public abstract class Metric
     {
         protected double metricValue;
@@ -44,7 +45,7 @@ namespace Barnacle
     }
 
 
-
+    [Serializable]
     public class StallCountMetric : Metric
     {
         public new RowSolverResult solverResult;

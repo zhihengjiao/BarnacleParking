@@ -31,7 +31,7 @@ namespace Barnacle
 
         public override void Add(object rowNode)
         {
-            throw new NotImplementedException();
+           
         }
 
         public override List<GeometryBase> Draw()

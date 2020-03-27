@@ -15,7 +15,7 @@ namespace Barnacle
     {
         public new List<RowSolverResult> resultRepository;
         public Zone zone;
-        public RowSolver(Metric metric, SolverResult solverResult) : base(metric, solverResult)
+        public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
 
         }
@@ -45,18 +45,24 @@ namespace Barnacle
                 RoadMeta.NORMAL_ROAD);
 
             // create new result and metric
-            SolverResult branchC = this.SOLVER_RESULT_FACTORY.CreateNew();
-            SolverResult branchR = this.SOLVER_RESULT_FACTORY.CreateNew();
+            RowSolverResult branchC = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
+            RowSolverResult branchR = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
             Metric mC = this.METRIC_FACTORY.CreateNew();
             Metric mR = this.METRIC_FACTORY.CreateNew();
             SetMetricAndResult(mC, branchC);
             SetMetricAndResult(mR, branchR);
 
+
             RowNode startC = GrowNode(null, c, branchC);
             RowNode startR = GrowNode(null, r, branchR);
+
+            Grow(startC, branchC, baseLineID);
+            Grow(startR, branchR, baseLineID);
+
+            
         }
 
-        RowNode GrowNode(RowNode node, RowNode newNode, SolverResult branch)
+        RowNode GrowNode(RowNode node, RowNode newNode, RowSolverResult branch)
         {
             // node is Road && newNode is CarStall
             // For adding connection to newNode

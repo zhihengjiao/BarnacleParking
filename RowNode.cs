@@ -93,12 +93,12 @@ namespace Barnacle
 
         public override void AddConnection()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override bool IsConnectedToRoadRow()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override string ToString()
