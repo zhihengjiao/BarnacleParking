@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Grasshopper.Kernel;
+using Rhino.Geometry;
+
 namespace Barnacle
 {
     public class RowSolverResult : SolverResult
@@ -30,12 +33,25 @@ namespace Barnacle
             throw new NotImplementedException();
         }
 
+        public override List<GeometryBase> Draw()
+        {
+            List<GeometryBase> list = new List<GeometryBase>();
+
+            foreach (RowNode node in result)
+            {
+          
+                list.Add(node.referenceLine.ToNurbsCurve());
+
+            }
+            return list;
+        }
+
         public override string ToString()
         {
             return base.ToString();
         }
 
-
+        
     }
 
 }

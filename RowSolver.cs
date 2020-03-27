@@ -173,5 +173,23 @@ namespace Barnacle
                 }
             }
         }
+
+        public RowSolverResult GetBest()
+        {
+            double max = 0;
+            RowSolverResult res = resultRepository[0];
+            foreach (RowSolverResult cur in resultRepository)
+            {
+                if (cur.totalWidth > max)
+                {
+                    res = cur;
+                    max = cur.totalWidth;
+                }
+            }
+            return res;
+        }
+
+
     }
+
 }

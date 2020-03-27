@@ -20,17 +20,33 @@ namespace Barnacle
         public double[] maxOffsetLength;
         public Polyline boundary;
 
-        public Zone(Point3d[] vertices, Line[] edges, Surface surface)
+        public Zone(Point3d[] vertices, Line[] edges)
         {
             this.vertices = vertices;
             this.edges = edges;
-            this.surface = surface;
             this.boundary = new Polyline(vertices);
             center = this.boundary.CenterPoint();
             maxOffsetLength = GetMaxOffsetLength();
             offsetDirection = new Vector3d[edges.Length];
             AppendEdgeDirection();
 
+        }
+
+        public Zone(Point3d[] vertices)
+        {
+            Line[] lines = new Line[4];
+            lines[0] = new Line(vertices[0], vertices[1]);
+            lines[1] = new Line(vertices[1], vertices[2]);
+            lines[2] = new Line(vertices[2], vertices[3]);
+            lines[3] = new Line(vertices[3], vertices[0]);
+
+            this.vertices = vertices;
+            this.edges = lines;
+            this.boundary = new Polyline(vertices);
+            center = this.boundary.CenterPoint();
+            maxOffsetLength = GetMaxOffsetLength();
+            offsetDirection = new Vector3d[edges.Length];
+            AppendEdgeDirection();
         }
 
         public Line OffsetInZone(Line referenceLine, int baseLineID, double dist)

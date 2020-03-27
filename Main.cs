@@ -32,7 +32,12 @@ namespace Barnacle
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            
+            pManager.AddPointParameter("point a", "a", "point of the polygon", GH_ParamAccess.item);
+            pManager.AddPointParameter("point b", "b", "point of the polygon", GH_ParamAccess.item);
+            pManager.AddPointParameter("point c", "c", "point of the polygon", GH_ParamAccess.item);
+            pManager.AddPointParameter("point d", "d", "point of the polygon", GH_ParamAccess.item);
+
+
         }
 
         /// <summary>
@@ -40,7 +45,7 @@ namespace Barnacle
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter();
+            pManager.AddGenericParameter("result", "res", "Geometry of parking lot", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -50,6 +55,26 @@ namespace Barnacle
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            Point3d a = new Point3d();
+            Point3d b = new Point3d();
+            Point3d c = new Point3d();
+            Point3d d = new Point3d();
+
+            if (!DA.GetData(0, ref a)) return;
+            if (!DA.GetData(1, ref b)) return;
+            if (!DA.GetData(2, ref c)) return;
+            if (!DA.GetData(3, ref d)) return;
+
+            Point3d[] points = new Point3d[] { a, b, c, d };
+
+            Zone zone = new Zone(points);
+            RowSolver solver = new RowSolver(new StallCountMetric(), new RowSolverResult());
+            solver.WithZone(zone);
+            solver.Solve();
+
+
+
+            DA.SetDataList(0, solver.GetBest().Draw());
         }
 
         /// <summary>
