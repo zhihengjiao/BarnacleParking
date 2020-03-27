@@ -56,7 +56,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Metric.cs" />
+    <Compile Include="RowSolver.cs" />
+    <Compile Include="RowSolverResult.cs" />
+    <Compile Include="RowNode.cs" />
+    <Compile Include="Zone.cs" />
+    <Compile Include="SolverResult.cs" />
+    <Compile Include="Solver.cs" />
+    <Compile Include="Copy.cs" />
+    <Compile Include="Meta.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="BarnacleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
