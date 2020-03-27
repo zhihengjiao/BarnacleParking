@@ -9,6 +9,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
+
     public interface IMeta
     {
         double GetWidth();

@@ -13,7 +13,7 @@ namespace Barnacle
     }
 
 
-
+    [Serializable]
     public abstract class Solver
     {
         public readonly Metric METRIC_FACTORY;
