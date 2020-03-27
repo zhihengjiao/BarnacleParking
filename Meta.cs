@@ -14,6 +14,7 @@ namespace Barnacle
         double GetWidth();
     }
 
+    [Serializable]
     public class CarStallMeta : IMeta
     {
         double degree;
@@ -60,6 +61,7 @@ namespace Barnacle
         }
     }
 
+    [Serializable]
     public class RoadMeta : IMeta
     {
         static double width = 7;

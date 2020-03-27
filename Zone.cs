@@ -10,6 +10,8 @@ using Rhino.Geometry.Intersect;
 
 namespace Barnacle
 {
+
+    [Serializable]
     public class Zone
     {
         public Point3d[] vertices;

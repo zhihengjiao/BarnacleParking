@@ -9,6 +9,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
+    [Serializable]
     public abstract class RowNode
     {
         public RowNode next;
@@ -51,6 +52,8 @@ namespace Barnacle
         public abstract bool IsConnectedToRoadRow();
     }
 
+
+    [Serializable]
     class CarStallRow : RowNode
     {
         int requiredConnection;
@@ -80,6 +83,7 @@ namespace Barnacle
     }
 
 
+    [Serializable]
     class RoadRow : RowNode
     {
 

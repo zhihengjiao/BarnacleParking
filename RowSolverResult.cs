@@ -9,6 +9,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
+    [Serializable]
     public class RowSolverResult : SolverResult
     {
         // public List<RowNode> result;
