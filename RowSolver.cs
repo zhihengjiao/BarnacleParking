@@ -17,7 +17,7 @@ namespace Barnacle
         public Zone zone;
         public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
-
+            resultRepository = new List<RowSolverResult>();
         }
 
         public RowSolver WithZone(Zone newZone)
