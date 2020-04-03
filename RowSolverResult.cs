@@ -29,10 +29,7 @@ namespace Barnacle
             totalWidth += rowNode.GetWidth();
         }
 
-        public override void Add(object rowNode)
-        {
-           
-        }
+
 
         public override List<GeometryBase> Draw()
         {

@@ -10,19 +10,30 @@ using Rhino.Geometry;
 namespace Barnacle
 {
     [Serializable]
-    public abstract class SolverResult
+    public abstract class SolverResult : IComparable
     {
         public List<RowNode> result;
         public Metric metric;
 
         public SolverResult() : this(new List<RowNode>())
-        { }
+        {
+            
+        }
         public SolverResult(List<RowNode> result)
         {
             this.result = result;
         }
 
-        public abstract void Add(Object rowNode);
+        public void Add(RowNode rowNode)
+        {
+            result.Add(rowNode);
+        }
+
+        public int CompareTo(object obj)
+        {
+            SolverResult other = (SolverResult)obj;
+            return this.metric.CompareTo(other.metric);
+        }
 
         public SolverResult CreateNew()
         {

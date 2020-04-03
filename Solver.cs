@@ -16,19 +16,20 @@ namespace Barnacle
     [Serializable]
     public abstract class Solver
     {
-        public readonly Metric METRIC_FACTORY;
-        public readonly SolverResult SOLVER_RESULT_FACTORY;
-        public List<SolverResult> resultRepository;
+        public Metric METRIC_FACTORY;
+        public SolverResult SOLVER_RESULT_FACTORY;
+        public SortedSet<RowSolverResult> resultRepository;
         public List<Solver> solvers;
+        public static int BEST_RESULT_NUMBER = 5;
         public Solver() { }
         public Solver(Metric metric, SolverResult solverResult)
         {
-            this.resultRepository = new List<SolverResult>();
+            this.resultRepository = new SortedSet<RowSolverResult>();
             this.METRIC_FACTORY = metric;
             this.SOLVER_RESULT_FACTORY = solverResult;
         }
 
-        public List<SolverResult> Solve()
+        public SortedSet<RowSolverResult> Solve()
         {
             /*
             foreach (Solver solver in solvers)

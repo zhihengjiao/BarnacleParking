@@ -13,11 +13,11 @@ namespace Barnacle
     [Serializable]
     public class RowSolver : Solver
     {
-        public new List<RowSolverResult> resultRepository;
+        public SortedSet<RowSolverResult> resultRepository;
         public Zone zone;
         public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
-            resultRepository = new List<RowSolverResult>();
+            resultRepository = new SortedSet<RowSolverResult>();
         }
 
         public RowSolver WithZone(Zone newZone)
@@ -26,7 +26,7 @@ namespace Barnacle
             return this;
         }
 
-        public new List<RowSolverResult> Solve()
+        public new SortedSet<RowSolverResult> Solve()
         {
             for (int i = 0; i < zone.edges.Length; i++)
             {
@@ -66,8 +66,10 @@ namespace Barnacle
             
         }
 
+
         RowNode GrowNode(RowNode node, RowNode newNode, RowSolverResult branch)
         {
+            Console.WriteLine("GrowNode\n");
             // node is Road && newNode is CarStall
             // For adding connection to newNode
             if (node != null)
@@ -119,6 +121,10 @@ namespace Barnacle
                     else
                     {
                         resultRepository.Add(branch);
+                        if (resultRepository.Count >= BEST_RESULT_NUMBER)
+                        {
+                            resultRepository.Remove(resultRepository.Min);
+                        }
                         continue;
                     }
                 }
@@ -189,7 +195,7 @@ namespace Barnacle
         public RowSolverResult GetBest()
         {
             double max = 0;
-            RowSolverResult res = resultRepository[0];
+            RowSolverResult res = resultRepository.Max;
             foreach (RowSolverResult cur in resultRepository)
             {
                 if (cur.totalWidth > max)
