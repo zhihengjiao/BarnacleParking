@@ -53,8 +53,12 @@ namespace Barnacle
             SetMetricAndResult(mR, branchR);
 
 
-            RowNode startC = GrowNode(null, c, branchC);
-            RowNode startR = GrowNode(null, r, branchR);
+            // RowNode startC = GrowNode(null, c, branchC);
+            // RowNode startR = GrowNode(null, r, branchR);
+            RowNode startC = c;
+            RowNode startR = r;
+            branchC.Add(startC);
+            branchR.Add(startR);
 
             Grow(startC, branchC, baseLineID);
             Grow(startR, branchR, baseLineID);
