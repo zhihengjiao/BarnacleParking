@@ -17,14 +17,54 @@ namespace Barnacle
         public IMeta metaItem;
         public Line referenceLine;
         public int baseLineID;
+        public Zone zone;
 
-        public RowNode(int baseLineID, Line referenceLine, IMeta metaItem)
+        public Line highLine;
+        public Line lowLine;
+        public Line middleLine;
+
+
+
+        public RowNode(int baseLineID, Line referenceLine, IMeta metaItem, Zone zone)
         {
             this.baseLineID = baseLineID;
             this.referenceLine = referenceLine;
             this.metaItem = metaItem;
+            this.zone = zone;
             next = null;
             prev = null;
+
+            highLine = zone.OffsetInZone(referenceLine, baseLineID, metaItem.GetWidth());
+            lowLine = referenceLine;
+            middleLine = midLine(lowLine, highLine);
+        }
+
+        public static Line midLine(Line a, Line b)
+        {
+            /*
+            Point3d start = new Point3d(
+                (a.FromX + b.FromX) / 2,
+                (a.FromY + b.FromY) / 2,
+                (a.FromZ + b.FromZ) / 2);
+            Point3d end = new Point3d(
+                (a.ToX + b.ToX) / 2,
+                (a.ToY + b.ToY) / 2,
+                (a.ToZ + b.ToZ) / 2);
+             */
+            if (a.Length > b.Length)
+            {
+                return midLine(b, a);
+            }
+            Point3d midFrom = a.PointAt(0.5);
+            Point3d midTo = b.ClosestPoint(midFrom, true);
+            Vector3d dir = new Vector3d(
+              (midTo.X - midFrom.X) / 2,
+              (midTo.Y - midFrom.Y) / 2,
+              (midTo.Z - midFrom.Z) / 2);
+            Line mid = new Line(a.From, a.To);
+            mid.Transform(Transform.Translation(dir));
+
+            return mid;
         }
 
         public double GetWidth()
@@ -50,6 +90,8 @@ namespace Barnacle
         public abstract void AddConnection();
 
         public abstract bool IsConnectedToRoadRow();
+
+        public abstract List<GeometryBase> Draw();
     }
 
 
@@ -57,8 +99,8 @@ namespace Barnacle
     class CarStallRow : RowNode
     {
         int requiredConnection;
-        public CarStallRow(int baseLineID, Line referenceLine, CarStallMeta metaItem) :
-            base(baseLineID, referenceLine, metaItem)
+        public CarStallRow(int baseLineID, Line referenceLine, CarStallMeta metaItem, Zone zone) :
+            base(baseLineID, referenceLine, metaItem, zone)
         {
             requiredConnection = metaItem.RequiredConnection();
 
@@ -67,6 +109,21 @@ namespace Barnacle
         public override void AddConnection()
         {
             requiredConnection -= 1;
+        }
+
+        public override List<GeometryBase> Draw()
+        {
+            List<GeometryBase> list = new List<GeometryBase>();
+            CarStallMeta c = (CarStallMeta)metaItem;
+            double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetLength(), false);
+            foreach (double p in divideParam)
+            {
+                Plane plane = new Plane(middleLine.PointAt(p), Vector3d.ZAxis);
+                plane.Rotate(c.GetDegree(), Vector3d.ZAxis);
+
+                list.AddRange(c.Draw(plane, zone.offsetDirection[baseLineID]));
+            }
+            return list;
         }
 
         public override bool IsConnectedToRoadRow()
@@ -87,13 +144,21 @@ namespace Barnacle
     class RoadRow : RowNode
     {
 
-        public RoadRow(int baseLineID, Line referenceLine, RoadMeta metaItem) :
-            base(baseLineID, referenceLine, metaItem)
+        public RoadRow(int baseLineID, Line referenceLine, RoadMeta metaItem, Zone zone) :
+            base(baseLineID, referenceLine, metaItem, zone)
         { }
 
         public override void AddConnection()
         {
             
+        }
+
+        public override List<GeometryBase> Draw()
+        {
+            List<GeometryBase> list = new List<GeometryBase>();
+            list.Add(highLine.ToNurbsCurve());
+            list.Add(lowLine.ToNurbsCurve());
+            return list;
         }
 
         public override bool IsConnectedToRoadRow()

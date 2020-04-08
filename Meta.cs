@@ -65,6 +65,50 @@ namespace Barnacle
         {
             return width;
         }
+        
+        public double GetLength()
+        {
+            return length;
+        }
+
+        public double GetDegree()
+        {
+            return degree;
+        }
+
+        public List<GeometryBase> Draw(Plane plane, Vector3d vec)
+        {
+            List<GeometryBase> list = new List<GeometryBase>();
+            Rectangle3d rec = new Rectangle3d(
+                plane,
+                ZERO_DEGREE.GetWidth(),
+                ZERO_DEGREE.GetLength());
+
+            if (!isDoubleRow)
+            {
+                list.Add(rec.ToNurbsCurve());
+            }
+            else
+            {
+                NurbsCurve stallUp = rec.ToNurbsCurve();
+                NurbsCurve stallDown = rec.ToNurbsCurve();
+                Vector3d vecUp = new Vector3d();
+                Vector3d vecDown;
+                double dist = width / 2;
+
+                vecUp.Unitize();
+                vecUp = new Vector3d(vecUp.X * dist, vecUp.Y*dist, vecUp.Z*dist);
+                vecDown = new Vector3d(vecUp);
+                vecDown.Reverse();
+                stallUp.Transform(Transform.Translation(vecUp));
+                stallDown.Transform(Transform.Translation(vecDown));
+                list.Add(stallUp);
+                list.Add(stallDown);
+            }
+            return list;
+            
+
+        }
 
         public int RequiredConnection()
         {

@@ -27,33 +27,7 @@ namespace Barnacle
             return this;
         }
 
-        public static Line midLine(Line a, Line b)
-        {
-            /*
-            Point3d start = new Point3d(
-                (a.FromX + b.FromX) / 2,
-                (a.FromY + b.FromY) / 2,
-                (a.FromZ + b.FromZ) / 2);
-            Point3d end = new Point3d(
-                (a.ToX + b.ToX) / 2,
-                (a.ToY + b.ToY) / 2,
-                (a.ToZ + b.ToZ) / 2);
-             */
-            if (a.Length > b.Length)
-            {
-                return midLine(b, a);
-            }
-            Point3d midFrom = a.PointAt(0.5);
-            Point3d midTo = b.ClosestPoint(midFrom, true);
-            Vector3d dir = new Vector3d(
-              (midTo.X - midFrom.X)/2,
-              (midTo.Y - midFrom.Y)/2,
-              (midTo.Z - midFrom.Z)/2);
-            Line mid = new Line(a.From, a.To);
-            mid.Transform(Transform.Translation(dir));
-
-            return mid;
-        }
+        
 
         /*
         public void Solve()
@@ -155,7 +129,7 @@ namespace Barnacle
         {
             CarStallRow c = new CarStallRow(baseLineID,
                 zone.edges[baseLineID],
-                CarStallMeta.NINETY_DEGREE);
+                CarStallMeta.NINETY_DEGREE, zone);
             // RoadRow r = new RoadRow(baseLineID,  zone.edges[baseLineID], RoadMeta.NORMAL_ROAD);
 
             // create new result and metric
@@ -238,10 +212,11 @@ namespace Barnacle
                 RoadRow r = new RoadRow(
                             baseLineID,
                             zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
-                            RoadMeta.NORMAL_ROAD
+                            RoadMeta.NORMAL_ROAD,
+                            zone
                             );
 
-                RowSolverResult newBranch = Copy.DeepClone(branch);
+                RowSolverResult newBranch =branch.Clone();
                 RowNode newNode = GrowNode(node, r, newBranch);
                 Grow(newNode, newBranch, baseLineID);
             }
@@ -253,10 +228,11 @@ namespace Barnacle
                     CarStallRow c = new CarStallRow(
                                 baseLineID,
                                 zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
-                                carMeta
+                                carMeta,
+                                zone
                                 );
                     // Grow a Car Branch
-                    RowSolverResult carBranch = Copy.DeepClone(branch);
+                    RowSolverResult carBranch = branch.Clone();
                     RowNode carNode = GrowNode(node, c, carBranch);
                     Grow(carNode, carBranch, baseLineID);
 

@@ -24,6 +24,14 @@ namespace Barnacle
             this.totalWidth = 0;
         }
 
+        public RowSolverResult Clone()
+        {
+            RowSolverResult res = new RowSolverResult();
+            res.totalWidth = this.totalWidth;
+            res.endNode = this.endNode;
+            return res;
+        }
+
         public void Add(RowNode rowNode)
         {
             // result.Add(rowNode);
@@ -57,7 +65,7 @@ namespace Barnacle
             while (node != null)
             {
                     
-                list.Add(node.referenceLine.ToNurbsCurve());
+                list.AddRange(node.Draw());
                 node = node.prev;
 
             }
