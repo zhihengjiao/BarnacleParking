@@ -37,7 +37,7 @@ namespace Barnacle
         public static CarStallMeta ZERO_DEGREE_DOUBLE = new CarStallMeta(0, true);
 
         public static CarStallMeta[] META_LIST = new CarStallMeta[] { 
-            NINETY_DEGREE, NINETY_DEGREE_DOUBLE, SIXTY_DEGREE, SIXTY_DEGREE_DOUBLE, FOUTYFIVE_DEGREE,
+             NINETY_DEGREE_DOUBLE, NINETY_DEGREE, SIXTY_DEGREE, SIXTY_DEGREE_DOUBLE, FOUTYFIVE_DEGREE,
         FOUTYFIVE_DEGREE_DOUBLE,  THIRTY_DEGREE, THIRTY_DEGREE_DOUBLE, ZERO_DEGREE, ZERO_DEGREE_DOUBLE};
 
         public CarStallMeta(double degree, bool isDoubleRow)
@@ -81,8 +81,8 @@ namespace Barnacle
             List<GeometryBase> list = new List<GeometryBase>();
             Rectangle3d rec = new Rectangle3d(
                 plane,
-                ZERO_DEGREE.GetWidth(),
-                ZERO_DEGREE.GetLength());
+                ZERO_DEGREE.GetLength(),
+                ZERO_DEGREE.GetWidth());
 
             if (!isDoubleRow)
             {
@@ -98,16 +98,21 @@ namespace Barnacle
 
                 vecUp.Unitize();
                 vecUp = new Vector3d(vecUp.X * dist, vecUp.Y*dist, vecUp.Z*dist);
+                stallUp.Transform(Transform.Translation(vecUp));
+                list.Add(stallUp);
+
                 vecDown = new Vector3d(vecUp);
                 vecDown.Reverse();
-                stallUp.Transform(Transform.Translation(vecUp));
                 stallDown.Transform(Transform.Translation(vecDown));
-                list.Add(stallUp);
                 list.Add(stallDown);
             }
             return list;
             
 
+        }
+        public string ToString()
+        {
+            return "Car" + ((degree / Math.PI) * 90);
         }
 
         public int RequiredConnection()

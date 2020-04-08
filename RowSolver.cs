@@ -13,12 +13,13 @@ namespace Barnacle
     [Serializable]
     public class RowSolver : Solver
     {
-        public List<RowSolverResult> resultRepository;
+        public SortedSet<RowSolverResult> resultRepository;
         public Zone zone;
         List<List<IMeta>> permutation = new List<List<IMeta>>();
+        public String log = "";
         public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
-            resultRepository = new List<RowSolverResult>();
+            resultRepository = new SortedSet<RowSolverResult>();
         }
 
         public RowSolver WithZone(Zone newZone)
@@ -115,7 +116,7 @@ namespace Barnacle
             }
         */
         
-        public new List<RowSolverResult> Solve()
+        public new SortedSet<RowSolverResult> Solve()
         {
             for (int i = 0; i < zone.edges.Length; i++)
             {
@@ -339,20 +340,32 @@ namespace Barnacle
             */
         }
 
-        public RowSolverResult GetBest()
+        public RowSolverResult GetBest(int i)
         {
-            double max = resultRepository[0].CalculateTotalStall();
-            RowSolverResult res = resultRepository[0];
+            if (i >= resultRepository.Count())
+            {
+                return null;
+            }
+            
             foreach (RowSolverResult cur in resultRepository)
             {
                 double curValue = cur.CalculateTotalStall();
-                if (curValue > max)
-                {
-                    res = cur;
-                    max =curValue;
-                }
             }
+            // double max = resultRepository.ElementAt(i).CalculateTotalStall();
+            RowSolverResult res = resultRepository.Max;
+            writeLog(res.endNode);
             return res;
+        }
+
+        public void writeLog(RowNode node)
+        {
+            RowNode cur = node;
+            while (cur != null)
+            {
+                log += cur.ToString();
+                log += ", ";
+                cur = cur.prev;
+            }
         }
 
 

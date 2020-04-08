@@ -18,6 +18,7 @@ namespace Barnacle
         public Line referenceLine;
         public int baseLineID;
         public Zone zone;
+        public static String name;
 
         public Line highLine;
         public Line lowLine;
@@ -31,6 +32,7 @@ namespace Barnacle
             this.referenceLine = referenceLine;
             this.metaItem = metaItem;
             this.zone = zone;
+            name = "RowNode";
             next = null;
             prev = null;
 
@@ -103,7 +105,7 @@ namespace Barnacle
             base(baseLineID, referenceLine, metaItem, zone)
         {
             requiredConnection = metaItem.RequiredConnection();
-
+            name = "CarStallRow";
         }
 
         public override void AddConnection()
@@ -115,10 +117,10 @@ namespace Barnacle
         {
             List<GeometryBase> list = new List<GeometryBase>();
             CarStallMeta c = (CarStallMeta)metaItem;
-            double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetLength(), false);
+            double[] divideParam = highLine.ToNurbsCurve().DivideByLength(c.GetLength(), false);
             foreach (double p in divideParam)
             {
-                Plane plane = new Plane(middleLine.PointAt(p), Vector3d.ZAxis);
+                Plane plane = new Plane(highLine.PointAt(p), Vector3d.ZAxis);
                 plane.Rotate(c.GetDegree(), Vector3d.ZAxis);
 
                 list.AddRange(c.Draw(plane, zone.offsetDirection[baseLineID]));
@@ -135,7 +137,7 @@ namespace Barnacle
 
         public override string ToString()
         {
-            return "CarStallRow";
+            return "CarStallRow" + this.metaItem.ToString();
         }
     }
 
@@ -146,7 +148,9 @@ namespace Barnacle
 
         public RoadRow(int baseLineID, Line referenceLine, RoadMeta metaItem, Zone zone) :
             base(baseLineID, referenceLine, metaItem, zone)
-        { }
+        {
+            name = "RoadRow";
+        }
 
         public override void AddConnection()
         {

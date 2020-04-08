@@ -10,12 +10,13 @@ using Rhino.Geometry;
 namespace Barnacle
 {
     [Serializable]
-    public class RowSolverResult : SolverResult
+    public class RowSolverResult : SolverResult, IComparable
     {
         // public List<RowNode> result;
         // public Metric metric;
         public double totalWidth;
         public RowNode endNode;
+        public double totalStall = 0;
 
         public RowSolverResult() : this(new List<RowNode>())
         { }
@@ -52,9 +53,21 @@ namespace Barnacle
             double res = 0;
             while (node != null)
             {
-                res += node.GetLineLength() / node.metaItem.GetWidth();
+
+#pragma warning disable CS0184 // 'is' expression's given expression is never of the provided type
+                if (node.GetType() == typeof(CarStallMeta))
+#pragma warning restore CS0184 // 'is' expression's given expression is never of the provided type
+                {
+                    CarStallMeta meta = (CarStallMeta)node.metaItem;
+                    res += node.GetLineLength() / meta.GetLength();
+                }
+
+
+                Rhino.RhinoApp.WriteLine(node.ToString());
                 node = node.prev;
+                
             }
+            this.totalStall = res;
             return res;
         }
 
@@ -70,6 +83,16 @@ namespace Barnacle
 
             }
             return list;
+        }
+
+        public new int CompareTo(object obj)
+        {
+            if (!(obj is RowSolverResult))
+            {
+                throw new ArgumentException();
+            }
+            RowSolverResult other = (RowSolverResult)obj;
+            return (int) (this.totalStall - other.totalStall);
         }
 
         public override string ToString()
