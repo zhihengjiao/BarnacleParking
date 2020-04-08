@@ -15,6 +15,7 @@ namespace Barnacle
         // public List<RowNode> result;
         // public Metric metric;
         public double totalWidth;
+        public RowNode endNode;
 
         public RowSolverResult() : this(new List<RowNode>())
         { }
@@ -25,7 +26,8 @@ namespace Barnacle
 
         public void Add(RowNode rowNode)
         {
-            result.Add(rowNode);
+            // result.Add(rowNode);
+            endNode = rowNode;
             totalWidth += rowNode.GetWidth();
         }
 

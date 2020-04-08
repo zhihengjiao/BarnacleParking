@@ -13,11 +13,12 @@ namespace Barnacle
     [Serializable]
     public class RowSolver : Solver
     {
-        public SortedSet<RowSolverResult> resultRepository;
+        public List<RowSolverResult> resultRepository;
         public Zone zone;
+        List<List<IMeta>> permutation = new List<List<IMeta>>();
         public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
-            resultRepository = new SortedSet<RowSolverResult>();
+            resultRepository = new List<RowSolverResult>();
         }
 
         public RowSolver WithZone(Zone newZone)
@@ -54,38 +55,48 @@ namespace Barnacle
             return mid;
         }
 
+        /*
         public void Solve()
         {
             // for each ref edge
             for (int i = 0; i < zone.edges.Length; i++)
             {
+                List<List<IMeta>> permutation = new List<List<IMeta>>();
                 // permute
                 // init
                 Line refLine = zone.edges[i];
                 double offsetBound = zone.maxOffsetLength[i];
-                List<List<IMeta>> permutation = new List<List<IMeta>>();
+                
                 List<Line> rows = new List<Line>();
                 List<double> totalWidth = new List<double>();
                 double curOffset = 0;
-
-                while (offsetBound < curOffset + RoadMeta.NORMAL_ROAD.GetWidth() + C)
-                    // first row
-                    for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
+                bool shouldBeCarRow = true;
+                List<IMeta> curPermutation = new List<IMeta>();
+                while (offsetBound < curOffset + CarStallMeta.ZERO_DEGREE.GetWidth())
                 {
-                    CarStallMeta firstRow = CarStallMeta.META_LIST[c];
-                    if (firstRow.GetWidth() > offsetBound)
+                    if (shouldBeCarRow)
                     {
-                        break;
-                    } else
-                    {
-                        // getting the middle line
-                        Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
-                        Line lowLine = refLine;
-                        Line middleLine = midLine(lowLine, highLine);
-                        // add to list
-                        rows.Add(middleLine);
-                        permutation.Add(firstRow);
-                    }
+                        for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
+                        {
+                            CarStallMeta firstRow = CarStallMeta.META_LIST[c];
+                            if (firstRow.GetWidth() > offsetBound)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                // getting the middle line
+                                Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
+                                Line lowLine = refLine;
+                                Line middleLine = midLine(lowLine, highLine);
+                                // add to list
+                                rows.Add(middleLine);
+                                curPermutation.Add(firstRow);
+                                permutation.Add(firstRow);
+                            }
+                        }
+                }
+                   
                 }
                 // more rows
                 
@@ -96,8 +107,41 @@ namespace Barnacle
             }
         }
 
-        /*
-        public new SortedSet<RowSolverResult> Solve()
+        public void DFS(int baseLineID, List<IMeta> curPermutation, bool shouldBeCarRow, double curOffset)
+        {
+            // base case
+            if (zone.maxOffsetLength[baseLineID] > curOffset)
+            {
+                curPermutation.RemoveAt(curPermutation.Count - 1);
+                permutation.Add(curPermutation);
+            }
+            // recursive
+            if (shouldBeCarRow)
+            {
+                for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
+                {
+                    CarStallMeta firstRow = CarStallMeta.META_LIST[c];
+                    if (firstRow.GetWidth() > zone.maxOffsetLength[baseLineID])
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        // getting the middle line
+                        Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
+                        Line lowLine = refLine;
+                        Line middleLine = midLine(lowLine, highLine);
+                        // add to list
+                        rows.Add(middleLine);
+                        curPermutation.Add(firstRow);
+                        permutation.Add(firstRow);
+                    }
+                }
+
+            }
+        */
+        
+        public new List<RowSolverResult> Solve()
         {
             for (int i = 0; i < zone.edges.Length; i++)
             {
@@ -105,35 +149,33 @@ namespace Barnacle
             }
             return resultRepository;
         }
-        */
+        
 
         void DFS(int baseLineID)
         {
             CarStallRow c = new CarStallRow(baseLineID,
                 zone.edges[baseLineID],
                 CarStallMeta.NINETY_DEGREE);
-            RoadRow r = new RoadRow(baseLineID,
-                zone.edges[baseLineID],
-                RoadMeta.NORMAL_ROAD);
+            // RoadRow r = new RoadRow(baseLineID,  zone.edges[baseLineID], RoadMeta.NORMAL_ROAD);
 
             // create new result and metric
             RowSolverResult branchC = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
-            RowSolverResult branchR = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
+            // RowSolverResult branchR = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
             Metric mC = this.METRIC_FACTORY.CreateNew();
-            Metric mR = this.METRIC_FACTORY.CreateNew();
+            // Metric mR = this.METRIC_FACTORY.CreateNew();
             SetMetricAndResult(mC, branchC);
-            SetMetricAndResult(mR, branchR);
+            // SetMetricAndResult(mR, branchR);
 
 
             // RowNode startC = GrowNode(null, c, branchC);
             // RowNode startR = GrowNode(null, r, branchR);
-            RowNode startC = c;
-            RowNode startR = r;
-            branchC.Add(startC);
-            branchR.Add(startR);
+            //  RowNode startC = c;
+           // RowNode startR = r;
+           // branchC.Add(startC);
+           //  branchR.Add(startR);
 
-            Grow(startC, branchC, baseLineID);
-            Grow(startR, branchR, baseLineID);
+            Grow(null, branchC, baseLineID);
+            // Grow(startR, branchR, baseLineID);
 
             
         }
@@ -181,11 +223,64 @@ namespace Barnacle
 
         void Grow(RowNode node, RowSolverResult branch, int baseLineID)
         {
+            // reach end.. base case
+            if (branch.totalWidth > zone.maxOffsetLength[baseLineID])
+            {
+                branch.StepBack();
+                resultRepository.Add(branch);
+                return;
+            }
+
+            // recursive
+            // add RoadRow
+            if (node.prev != null && node.prev is CarStallRow)
+            {
+                RoadRow r = new RoadRow(
+                            baseLineID,
+                            zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                            RoadMeta.NORMAL_ROAD
+                            );
+
+                RowSolverResult newBranch = Copy.DeepClone(branch);
+                RowNode newNode = GrowNode(node, r, newBranch);
+                Grow(newNode, newBranch, baseLineID);
+            }
+            // add CarRow
+            else
+            {
+                foreach (CarStallMeta carMeta in CarStallMeta.META_LIST)
+                {
+                    CarStallRow c = new CarStallRow(
+                                baseLineID,
+                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                                carMeta
+                                );
+                    // Grow a Car Branch
+                    RowSolverResult carBranch = Copy.DeepClone(branch);
+                    RowNode carNode = GrowNode(node, c, carBranch);
+                    Grow(carNode, carBranch, baseLineID);
+
+                }
+            }
+            
+
+
+
+
+
+
+
+
+
+            /* OLD IMPLEMENTATION
             foreach (CarStallMeta carMeta in CarStallMeta.META_LIST)
             {
+
                 // If exceed the maxWidth(base case)
                 if (branch.totalWidth + carMeta.GetWidth() >= zone.maxOffsetLength[baseLineID])
                 {
+                    resultRepository.Add(branch);
+                    continue;
                     if (!IsLegalAddition(node))
                     {
                         continue;
@@ -193,10 +288,12 @@ namespace Barnacle
                     else
                     {
                         resultRepository.Add(branch);
+                        
                         if (resultRepository.Count >= BEST_RESULT_NUMBER)
                         {
                             resultRepository.Remove(resultRepository.Min);
                         }
+                        
                         continue;
                     }
                 }
@@ -205,6 +302,7 @@ namespace Barnacle
                 // if node.referenceLine is None:
                 // self.resultRepository.append(branch)
                 // return
+                
 
                 // if this node is CarStall
                 if (node is CarStallRow)
@@ -262,6 +360,7 @@ namespace Barnacle
 
                 }
             }
+            */
         }
 
         public RowSolverResult GetBest()
