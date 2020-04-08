@@ -31,16 +31,34 @@ namespace Barnacle
             totalWidth += rowNode.GetWidth();
         }
 
+        public void StepBack()
+        {
+            totalWidth -= endNode.GetWidth();
+            endNode = endNode.prev;
+            
+        }
 
+      public double CalculateTotalStall()
+        {
+            RowNode node = endNode;
+            double res = 0;
+            while (node != null)
+            {
+                res += node.GetLineLength() / node.metaItem.GetWidth();
+                node = node.prev;
+            }
+            return res;
+        }
 
         public override List<GeometryBase> Draw()
         {
             List<GeometryBase> list = new List<GeometryBase>();
-
-            foreach (RowNode node in result)
+            RowNode node = endNode;
+            while (node != null)
             {
-          
+                    
                 list.Add(node.referenceLine.ToNurbsCurve());
+                node = node.prev;
 
             }
             return list;

@@ -167,14 +167,14 @@ namespace Barnacle
             // SetMetricAndResult(mR, branchR);
 
 
-            // RowNode startC = GrowNode(null, c, branchC);
+            RowNode startC = GrowNode(null, c, branchC);
             // RowNode startR = GrowNode(null, r, branchR);
             //  RowNode startC = c;
            // RowNode startR = r;
-           // branchC.Add(startC);
+            branchC.Add(startC);
            //  branchR.Add(startR);
 
-            Grow(null, branchC, baseLineID);
+            Grow(startC, branchC, baseLineID);
             // Grow(startR, branchR, baseLineID);
 
             
@@ -191,7 +191,7 @@ namespace Barnacle
                 if (node is RoadRow && newNode is CarStallRow)
                 {
                     newNode = (CarStallRow)newNode;
-                    newNode.AddConnection();
+                    // newNode.AddConnection();
                 }
             }
             newNode.prev = node;
@@ -233,7 +233,7 @@ namespace Barnacle
 
             // recursive
             // add RoadRow
-            if (node.prev != null && node.prev is CarStallRow)
+            if (node != null && node is CarStallRow)
             {
                 RoadRow r = new RoadRow(
                             baseLineID,
@@ -365,14 +365,15 @@ namespace Barnacle
 
         public RowSolverResult GetBest()
         {
-            double max = 0;
-            RowSolverResult res = resultRepository.Max;
+            double max = resultRepository[0].CalculateTotalStall();
+            RowSolverResult res = resultRepository[0];
             foreach (RowSolverResult cur in resultRepository)
             {
-                if (cur.totalWidth > max)
+                double curValue = cur.CalculateTotalStall();
+                if (curValue > max)
                 {
                     res = cur;
-                    max = cur.totalWidth;
+                    max =curValue;
                 }
             }
             return res;
