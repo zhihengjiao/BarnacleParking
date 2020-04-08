@@ -26,10 +26,20 @@ namespace Barnacle
         int stallCount = 1;
 
         public static CarStallMeta NINETY_DEGREE = new CarStallMeta(Math.PI, false);
+        public static CarStallMeta NINETY_DEGREE_DOUBLE = new CarStallMeta(Math.PI, true);
         public static CarStallMeta SIXTY_DEGREE = new CarStallMeta(Math.PI * 2 / 3, false);
         public static CarStallMeta SIXTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI * 2 / 3, true);
+        public static CarStallMeta FOUTYFIVE_DEGREE = new CarStallMeta(Math.PI / 2, false);
+        public static CarStallMeta FOUTYFIVE_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 2, true);
+        public static CarStallMeta THIRTY_DEGREE = new CarStallMeta(Math.PI / 3, false);
+        public static CarStallMeta THIRTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 3, true);
+        public static CarStallMeta ZERO_DEGREE = new CarStallMeta(0, false);
+        public static CarStallMeta ZERO_DEGREE_DOUBLE = new CarStallMeta(0, true);
 
-        public static CarStallMeta[] META_LIST = new CarStallMeta[] { NINETY_DEGREE, SIXTY_DEGREE, SIXTY_DEGREE_DOUBLE };
+        public static CarStallMeta[] META_LIST = new CarStallMeta[] { 
+            NINETY_DEGREE, NINETY_DEGREE_DOUBLE, SIXTY_DEGREE, SIXTY_DEGREE_DOUBLE, FOUTYFIVE_DEGREE,
+        FOUTYFIVE_DEGREE_DOUBLE,  THIRTY_DEGREE, THIRTY_DEGREE_DOUBLE, ZERO_DEGREE, ZERO_DEGREE_DOUBLE};
+
         public CarStallMeta(double degree, bool isDoubleRow)
         {
             this.degree = degree;

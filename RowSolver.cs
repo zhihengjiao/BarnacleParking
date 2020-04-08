@@ -26,6 +26,77 @@ namespace Barnacle
             return this;
         }
 
+        public static Line midLine(Line a, Line b)
+        {
+            /*
+            Point3d start = new Point3d(
+                (a.FromX + b.FromX) / 2,
+                (a.FromY + b.FromY) / 2,
+                (a.FromZ + b.FromZ) / 2);
+            Point3d end = new Point3d(
+                (a.ToX + b.ToX) / 2,
+                (a.ToY + b.ToY) / 2,
+                (a.ToZ + b.ToZ) / 2);
+             */
+            if (a.Length > b.Length)
+            {
+                return midLine(b, a);
+            }
+            Point3d midFrom = a.PointAt(0.5);
+            Point3d midTo = b.ClosestPoint(midFrom, true);
+            Vector3d dir = new Vector3d(
+              (midTo.X - midFrom.X)/2,
+              (midTo.Y - midFrom.Y)/2,
+              (midTo.Z - midFrom.Z)/2);
+            Line mid = new Line(a.From, a.To);
+            mid.Transform(Transform.Translation(dir));
+
+            return mid;
+        }
+
+        public void Solve()
+        {
+            // for each ref edge
+            for (int i = 0; i < zone.edges.Length; i++)
+            {
+                // permute
+                // init
+                Line refLine = zone.edges[i];
+                double offsetBound = zone.maxOffsetLength[i];
+                List<List<IMeta>> permutation = new List<List<IMeta>>();
+                List<Line> rows = new List<Line>();
+                List<double> totalWidth = new List<double>();
+                double curOffset = 0;
+
+                while (offsetBound < curOffset + RoadMeta.NORMAL_ROAD.GetWidth() + C)
+                    // first row
+                    for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
+                {
+                    CarStallMeta firstRow = CarStallMeta.META_LIST[c];
+                    if (firstRow.GetWidth() > offsetBound)
+                    {
+                        break;
+                    } else
+                    {
+                        // getting the middle line
+                        Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
+                        Line lowLine = refLine;
+                        Line middleLine = midLine(lowLine, highLine);
+                        // add to list
+                        rows.Add(middleLine);
+                        permutation.Add(firstRow);
+                    }
+                }
+                // more rows
+                
+                for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
+                {
+
+                }
+            }
+        }
+
+        /*
         public new SortedSet<RowSolverResult> Solve()
         {
             for (int i = 0; i < zone.edges.Length; i++)
@@ -34,6 +105,7 @@ namespace Barnacle
             }
             return resultRepository;
         }
+        */
 
         void DFS(int baseLineID)
         {
