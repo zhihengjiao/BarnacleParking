@@ -128,29 +128,31 @@ namespace Barnacle
 
         void DFS(int baseLineID)
         {
-            CarStallRow c = new CarStallRow(baseLineID,
+            //foreach (CarStallMeta carMeta in CarStallMeta.META_LIST)
+            
+                CarStallRow c = new CarStallRow(baseLineID,
                 zone.edges[baseLineID],
                 CarStallMeta.NINETY_DEGREE, zone);
-            // RoadRow r = new RoadRow(baseLineID,  zone.edges[baseLineID], RoadMeta.NORMAL_ROAD);
+                // RoadRow r = new RoadRow(baseLineID,  zone.edges[baseLineID], RoadMeta.NORMAL_ROAD);
 
-            // create new result and metric
-            RowSolverResult branchC = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
-            // RowSolverResult branchR = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
-            Metric mC = this.METRIC_FACTORY.CreateNew();
-            // Metric mR = this.METRIC_FACTORY.CreateNew();
-            SetMetricAndResult(mC, branchC);
-            // SetMetricAndResult(mR, branchR);
+                // create new result and metric
+                RowSolverResult branchC = (RowSolverResult)this.SOLVER_RESULT_FACTORY.CreateNew();
+                // RowSolverResult branchR = (RowSolverResult) this.SOLVER_RESULT_FACTORY.CreateNew();
+                Metric mC = this.METRIC_FACTORY.CreateNew();
+                // Metric mR = this.METRIC_FACTORY.CreateNew();
+                SetMetricAndResult(mC, branchC);
+                // SetMetricAndResult(mR, branchR);
 
 
-            RowNode startC = GrowNode(null, c, branchC);
-            // RowNode startR = GrowNode(null, r, branchR);
-            //  RowNode startC = c;
-           // RowNode startR = r;
-            branchC.Add(startC);
-           //  branchR.Add(startR);
+                RowNode startC = GrowNode(null, c, branchC);
+                // RowNode startR = GrowNode(null, r, branchR);
+                //  RowNode startC = c;
+                // RowNode startR = r;
+                branchC.Add(startC);
+                //  branchR.Add(startR);
 
-            Grow(startC, branchC, baseLineID);
-            // Grow(startR, branchR, baseLineID);
+                Grow(startC, branchC, baseLineID);
+                // Grow(startR, branchR, baseLineID);
 
             
         }

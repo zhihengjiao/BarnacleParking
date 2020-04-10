@@ -61,14 +61,47 @@ namespace Barnacle
 
             Interval intersectInterval;
             Point3d[] pointList = new Point3d[2];
-            Intersection.LineBox(newLine, new BoundingBox(vertices), 0.001, out intersectInterval);
-            pointList[0] = newLine.PointAt(intersectInterval.T0);
-            pointList[1] = newLine.PointAt(intersectInterval.T1);
-            if (pointList.Length == 2)
+            //Intersection.LineBox(newLine, this.boundary, 0.001, out intersectInterval);
+            List<double> paramList = new List<double>();
+            foreach (Line edge in edges)
             {
+                double a;
+                double b;
+                Intersection.LineLine(newLine, edge, out a, out b, 0.001, true);
+                if (a != 0)
+                {
+                    paramList.Add(a);
+                }
+
+            }
+            // getting the inner points
+            
+            double left = -10;
+            double right = 10;
+            foreach (double i in paramList)
+            {
+                if (i > left && i <= 0.5)
+                {
+                    left = i;
+                }
+                if (i < right && i >= 0.5)
+                {
+                    right = i;
+                }
+            }
+            
+            // Intersection.CurveBrep(newLine.ToNurbsCurve(), this.boundary., 0.001, 0.01, out intersectInterval);
+            //pointList[0] = newLine.PointAt(intersectInterval.T0);
+            //pointList[1] = newLine.PointAt(intersectInterval.T1);
+            pointList[0] = newLine.PointAt(left);
+            pointList[1] = newLine.PointAt(right);
+            if (paramList.Count >= 2)
+            {
+                //pointList[0] = newLine.PointAt(paramList[0]);
+                //pointList[1] = newLine.PointAt(paramList[1]);
                 return new Line(pointList[0], pointList[1]);
             }
-            else { throw new ArgumentException("No Intersection"); }
+            else { return newLine; }
         }
 
         double[] GetMaxOffsetLength()

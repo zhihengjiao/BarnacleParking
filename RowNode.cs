@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -117,10 +117,11 @@ namespace Barnacle
         {
             List<GeometryBase> list = new List<GeometryBase>();
             CarStallMeta c = (CarStallMeta)metaItem;
-            double[] divideParam = highLine.ToNurbsCurve().DivideByLength(c.GetLength(), false);
+            MessageBox.Show(c.ToString());
+            double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetWidth(), false);
             foreach (double p in divideParam)
             {
-                Plane plane = new Plane(highLine.PointAt(p), Vector3d.ZAxis);
+                Plane plane = new Plane(middleLine.PointAt(p), Vector3d.ZAxis);
                 plane.Rotate(c.GetDegree(), Vector3d.ZAxis);
 
                 list.AddRange(c.Draw(plane, zone.offsetDirection[baseLineID]));

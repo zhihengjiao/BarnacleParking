@@ -81,9 +81,11 @@ namespace Barnacle
             List<GeometryBase> list = new List<GeometryBase>();
             Rectangle3d rec = new Rectangle3d(
                 plane,
-                ZERO_DEGREE.GetLength(),
-                ZERO_DEGREE.GetWidth());
-
+                ZERO_DEGREE.GetWidth(),
+                ZERO_DEGREE.GetLength());
+            Vector3d move = new Vector3d(rec.Center.X - plane.Origin.X ,rec.Center.Y - plane.Origin.Y, rec.Center.Z - plane.Origin.Z);
+            move.Reverse();
+            rec.Transform(Transform.Translation(move));
             if (!isDoubleRow)
             {
                 list.Add(rec.ToNurbsCurve());
