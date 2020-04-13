@@ -63,7 +63,7 @@ namespace Barnacle
                 }
 
 
-                Rhino.RhinoApp.WriteLine(node.ToString());
+                //Rhino.RhinoApp.WriteLine(node.ToString());
                 node = node.prev;
                 
             }

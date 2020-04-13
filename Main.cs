@@ -46,7 +46,7 @@ namespace Barnacle
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("result", "res", "Geometry of parking lot", GH_ParamAccess.list);
-            pManager.AddTextParameter("log", "log", "print of result", GH_ParamAccess.item);
+            // pManager.AddTextParameter("log", "log", "print of result", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Barnacle
 
 
             DA.SetDataList(0, solver.GetBest(i).Draw());
-            DA.SetData(1, solver.log);
+            // DA.SetData(1, solver.log);
         }
 
         /// <summary>

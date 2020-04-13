@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -13,13 +13,13 @@ namespace Barnacle
     [Serializable]
     public class RowSolver : Solver
     {
-        public SortedSet<RowSolverResult> resultRepository;
+        public List<RowSolverResult> resultRepository;
         public Zone zone;
         List<List<IMeta>> permutation = new List<List<IMeta>>();
         public String log = "";
         public RowSolver(Metric metric, RowSolverResult RowSolverResult) : base(metric, RowSolverResult)
         {
-            resultRepository = new SortedSet<RowSolverResult>();
+            resultRepository = new List<RowSolverResult>();
         }
 
         public RowSolver WithZone(Zone newZone)
@@ -116,7 +116,7 @@ namespace Barnacle
             }
         */
         
-        public new SortedSet<RowSolverResult> Solve()
+        public new List<RowSolverResult> Solve()
         {
             for (int i = 0; i < zone.edges.Length; i++)
             {
@@ -342,9 +342,9 @@ namespace Barnacle
             */
         }
 
-        public RowSolverResult GetBest(int i)
+        public RowSolverResult GetBest(int n)
         {
-            if (i >= resultRepository.Count())
+            if (n >= resultRepository.Count())
             {
                 return null;
             }
@@ -354,8 +354,9 @@ namespace Barnacle
                 double curValue = cur.CalculateTotalStall();
             }
             // double max = resultRepository.ElementAt(i).CalculateTotalStall();
-            RowSolverResult res = resultRepository.Max;
-            writeLog(res.endNode);
+            MessageBox.Show(resultRepository.Count().ToString());
+            RowSolverResult res = resultRepository[n];
+            //writeLog(res.endNode);
             return res;
         }
 

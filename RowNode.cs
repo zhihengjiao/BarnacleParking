@@ -117,7 +117,7 @@ namespace Barnacle
         {
             List<GeometryBase> list = new List<GeometryBase>();
             CarStallMeta c = (CarStallMeta)metaItem;
-            MessageBox.Show(c.ToString());
+            // MessageBox.Show(c.ToString());
             double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetWidth(), false);
             foreach (double p in divideParam)
             {
