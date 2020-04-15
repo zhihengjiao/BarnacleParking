@@ -11,7 +11,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
-    public class Main : GH_Component
+    public class Main2 : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -20,11 +20,11 @@ namespace Barnacle
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        RowSolver res;
+        BoundarySolver res;
         bool getData = false;
         bool calculation = false;
-        public Main()
-          : base("Barnacle", "Barnacle",
+        public Main2()
+          : base("BoundaryParking", "Boundary",
               "Description",
               "Barnacle", "Warppers")
         {
@@ -50,6 +50,7 @@ namespace Barnacle
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("result", "res", "Geometry of parking lot", GH_ParamAccess.list);
+            pManager.AddGenericParameter("out", "out", "Geometry of offset", GH_ParamAccess.list);
             // pManager.AddTextParameter("log", "log", "print of result", GH_ParamAccess.item);
         }
 
@@ -84,7 +85,7 @@ namespace Barnacle
             {
                 Zone zone = new Zone(points);
 
-                RowSolver solver = new RowSolver(new StallCountMetric(), new RowSolverResult());
+                BoundarySolver solver = new BoundarySolver(new StallCountMetric(), new BoundarySolverResult());
                 solver.WithZone(zone);
                 solver.Solve();
                 res = solver;
@@ -93,6 +94,7 @@ namespace Barnacle
             if (res != null)
             {
                 DA.SetDataList(0, res.GetBest(i).Draw());
+                DA.SetDataList(1, res.GetBest(i).Out());
             } else
             {
 
@@ -123,7 +125,7 @@ namespace Barnacle
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("cb40292c-7f57-4b55-9b94-8798789e4abc"); }
+            get { return new Guid("cb40292c-7f57-4b55-9b94-8798789e4abf"); }
         }
     }
 }

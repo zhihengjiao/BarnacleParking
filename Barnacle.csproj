@@ -56,7 +56,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundarySolverResult.cs" />
+    <Compile Include="Main2.cs" />
     <Compile Include="Metric.cs" />
+    <Compile Include="BoundarySolver.cs" />
     <Compile Include="RowSolver.cs" />
     <Compile Include="RowSolverResult.cs" />
     <Compile Include="RowNode.cs" />

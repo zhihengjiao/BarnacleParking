@@ -17,6 +17,7 @@ namespace Barnacle
         public double totalWidth;
         public RowNode endNode;
         public double totalStall = 0;
+        public int singleRowNum = 0;
 
         public RowSolverResult() : this(new List<RowNode>())
         { }
@@ -30,6 +31,7 @@ namespace Barnacle
             RowSolverResult res = new RowSolverResult();
             res.totalWidth = this.totalWidth;
             res.endNode = this.endNode;
+            res.singleRowNum = this.singleRowNum;
             return res;
         }
 
@@ -38,6 +40,10 @@ namespace Barnacle
             // result.Add(rowNode);
             endNode = rowNode;
             totalWidth += rowNode.GetWidth();
+             if (!rowNode.metaItem.IsDouble() && (rowNode.metaItem.Type() == "car"))
+            {
+                this.singleRowNum++;
+            }
         }
 
         public void StepBack()

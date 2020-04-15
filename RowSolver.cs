@@ -200,6 +200,12 @@ namespace Barnacle
 
         void Grow(RowNode node, RowSolverResult branch, int baseLineID)
         {
+            // Cut Branch
+            if (branch.singleRowNum  < 0)
+            {
+                return;
+            }
+
             // reach end.. base case
             if (branch.totalWidth > zone.maxOffsetLength[baseLineID])
             {

@@ -13,13 +13,15 @@ namespace Barnacle
     public interface IMeta
     {
         double GetWidth();
+        string Type();
+        bool IsDouble();
     }
 
     [Serializable]
     public class CarStallMeta : IMeta
     {
         double degree;
-        bool isDoubleRow;
+        public bool isDoubleRow;
         double width = 2.7;
         double length = 5.3;
         int requiredConnection = 1;
@@ -112,7 +114,8 @@ namespace Barnacle
             
 
         }
-        public string ToString()
+
+        public override string ToString()
         {
             return "Car" + ((degree / Math.PI) * 90);
         }
@@ -120,6 +123,16 @@ namespace Barnacle
         public int RequiredConnection()
         {
             return requiredConnection;
+        }
+
+        public bool IsDouble()
+        {
+            return isDoubleRow ;
+        }
+
+        public string Type()
+        {
+            return "car";
         }
     }
 
@@ -137,6 +150,16 @@ namespace Barnacle
         public double GetWidth()
         {
             return width;
+        }
+
+        public bool IsDouble()
+        {
+           return false;
+        }
+
+        public string Type()
+        {
+            return "road";
         }
     }
 
