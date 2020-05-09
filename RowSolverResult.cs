@@ -39,7 +39,7 @@ namespace Barnacle
         {
             // result.Add(rowNode);
             endNode = rowNode;
-            totalWidth += rowNode.GetWidth();
+            totalWidth += rowNode.GetClearHeight();
              if (!rowNode.metaItem.IsDouble() && (rowNode.metaItem.Type() == "car"))
             {
                 this.singleRowNum++;
@@ -48,7 +48,7 @@ namespace Barnacle
 
         public void StepBack()
         {
-            totalWidth -= endNode.GetWidth();
+            totalWidth -= endNode.GetClearHeight();
             endNode = endNode.prev;
             
         }

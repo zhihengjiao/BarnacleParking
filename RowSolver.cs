@@ -47,21 +47,21 @@ namespace Barnacle
                 double curOffset = 0;
                 bool shouldBeCarRow = true;
                 List<IMeta> curPermutation = new List<IMeta>();
-                while (offsetBound < curOffset + CarStallMeta.ZERO_DEGREE.GetWidth())
+                while (offsetBound < curOffset + CarStallMeta.ZERO_DEGREE.GetClearHeight())
                 {
                     if (shouldBeCarRow)
                     {
                         for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
                         {
                             CarStallMeta firstRow = CarStallMeta.META_LIST[c];
-                            if (firstRow.GetWidth() > offsetBound)
+                            if (firstRow.GetClearHeight() > offsetBound)
                             {
                                 break;
                             }
                             else
                             {
                                 // getting the middle line
-                                Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
+                                Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetClearHeight());
                                 Line lowLine = refLine;
                                 Line middleLine = midLine(lowLine, highLine);
                                 // add to list
@@ -96,14 +96,14 @@ namespace Barnacle
                 for (int c = 0; c < CarStallMeta.META_LIST.Length; c++)
                 {
                     CarStallMeta firstRow = CarStallMeta.META_LIST[c];
-                    if (firstRow.GetWidth() > zone.maxOffsetLength[baseLineID])
+                    if (firstRow.GetClearHeight() > zone.maxOffsetLength[baseLineID])
                     {
                         break;
                     }
                     else
                     {
                         // getting the middle line
-                        Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetWidth());
+                        Line highLine = zone.OffsetInZone(refLine, i, firstRow.GetClearHeight());
                         Line lowLine = refLine;
                         Line middleLine = midLine(lowLine, highLine);
                         // add to list
@@ -130,9 +130,11 @@ namespace Barnacle
         {
             //foreach (CarStallMeta carMeta in CarStallMeta.META_LIST)
             
-                CarStallRow c = new CarStallRow(baseLineID,
-                zone.edges[baseLineID],
-                CarStallMeta.NINETY_DEGREE, zone);
+                CarStallRow c = new CarStallRow(
+                    baseLineID,
+                    zone.edges[baseLineID],
+                    CarStallMeta.NINETY_DEGREE, 
+                    zone);
                 // RoadRow r = new RoadRow(baseLineID,  zone.edges[baseLineID], RoadMeta.NORMAL_ROAD);
 
                 // create new result and metric
@@ -220,7 +222,7 @@ namespace Barnacle
             {
                 RoadRow r = new RoadRow(
                             baseLineID,
-                            zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                            zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                             RoadMeta.NORMAL_ROAD,
                             zone
                             );
@@ -236,7 +238,7 @@ namespace Barnacle
                 {
                     CarStallRow c = new CarStallRow(
                                 baseLineID,
-                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                                 carMeta,
                                 zone
                                 );
@@ -262,7 +264,7 @@ namespace Barnacle
             {
 
                 // If exceed the maxWidth(base case)
-                if (branch.totalWidth + carMeta.GetWidth() >= zone.maxOffsetLength[baseLineID])
+                if (branch.totalWidth + carMeta.GetClearHeight() >= zone.maxOffsetLength[baseLineID])
                 {
                     resultRepository.Add(branch);
                     continue;
@@ -297,7 +299,7 @@ namespace Barnacle
                     {
                         RoadRow r = new RoadRow(
                             baseLineID,
-                            zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                            zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                             RoadMeta.NORMAL_ROAD
                             );
 
@@ -310,13 +312,13 @@ namespace Barnacle
                     {
                         CarStallRow c = new CarStallRow(
                                 baseLineID,
-                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                                 carMeta
                                 );
 
                         RoadRow r = new RoadRow(
                                 baseLineID,
-                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                                 RoadMeta.NORMAL_ROAD
                                 );
 
@@ -336,7 +338,7 @@ namespace Barnacle
                 {
                     CarStallRow c = new CarStallRow(
                                 baseLineID,
-                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetWidth()),
+                                zone.OffsetInZone(node.referenceLine, baseLineID, node.GetClearHeight()),
                                 carMeta
                                 );
                     RowSolverResult newBranch = Copy.DeepClone(branch);

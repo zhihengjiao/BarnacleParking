@@ -59,7 +59,7 @@ namespace Barnacle
                 if (node is CarStallRow)
                 {
                     CarStallRow carNode = ((CarStallRow)node);
-                    double temp = carNode.GetLineLength() / carNode.GetWidth();
+                    double temp = carNode.GetLineLength() / carNode.GetClearHeight();
                     this.metricValue += temp;
                 }
             }

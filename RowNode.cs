@@ -36,7 +36,7 @@ namespace Barnacle
             next = null;
             prev = null;
 
-            highLine = zone.OffsetInZone(referenceLine, baseLineID, metaItem.GetWidth());
+            highLine = zone.OffsetInZone(referenceLine, baseLineID, metaItem.GetClearHeight());
             lowLine = referenceLine;
             middleLine = midLine(lowLine, highLine);
         }
@@ -69,9 +69,9 @@ namespace Barnacle
             return mid;
         }
 
-        public double GetWidth()
+        public double GetClearHeight()
         {
-            return metaItem.GetWidth();
+            return metaItem.GetClearHeight();
         }
 
         public int GetBaseLineID()
@@ -118,10 +118,16 @@ namespace Barnacle
             List<GeometryBase> list = new List<GeometryBase>();
             CarStallMeta c = (CarStallMeta)metaItem;
             // MessageBox.Show(c.ToString());
-            double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetWidth(), false);
+            double[] divideParam = middleLine.ToNurbsCurve().DivideByLength(c.GetClearLength(), false);
+
             foreach (double p in divideParam)
             {
-                Plane plane = new Plane(middleLine.PointAt(p), Vector3d.ZAxis);
+                // adjust plane direction
+                // z: zAxis, x: 
+                Vector3d y = zone.offsetDirection[baseLineID];
+                Vector3d x = Vector3d.CrossProduct(y, Vector3d.ZAxis);
+                Plane plane = new Plane(middleLine.PointAt(p), x, y);
+                
                 plane.Rotate(c.GetDegree(), Vector3d.ZAxis);
 
                 list.AddRange(c.Draw(plane, zone.offsetDirection[baseLineID]));

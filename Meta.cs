@@ -12,7 +12,7 @@ namespace Barnacle
 
     public interface IMeta
     {
-        double GetWidth();
+        double GetClearHeight();
         string Type();
         bool IsDouble();
     }
@@ -24,17 +24,19 @@ namespace Barnacle
         public bool isDoubleRow;
         double width = 2.7;
         double length = 5.3;
+        double clearHeight = 2.7;
+        double clearLength = 5.3;
         int requiredConnection = 1;
         int stallCount = 1;
 
-        public static CarStallMeta NINETY_DEGREE = new CarStallMeta(Math.PI, false);
-        public static CarStallMeta NINETY_DEGREE_DOUBLE = new CarStallMeta(Math.PI, true);
-        public static CarStallMeta SIXTY_DEGREE = new CarStallMeta(Math.PI * 2 / 3, false);
-        public static CarStallMeta SIXTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI * 2 / 3, true);
-        public static CarStallMeta FOUTYFIVE_DEGREE = new CarStallMeta(Math.PI / 2, false);
-        public static CarStallMeta FOUTYFIVE_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 2, true);
-        public static CarStallMeta THIRTY_DEGREE = new CarStallMeta(Math.PI / 3, false);
-        public static CarStallMeta THIRTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 3, true);
+        public static CarStallMeta NINETY_DEGREE = new CarStallMeta(Math.PI / 2, false);
+        public static CarStallMeta NINETY_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 2, true);
+        public static CarStallMeta SIXTY_DEGREE = new CarStallMeta(Math.PI * 1 / 3, false);
+        public static CarStallMeta SIXTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI * 1 / 3, true);
+        public static CarStallMeta FOUTYFIVE_DEGREE = new CarStallMeta(Math.PI / 4, false);
+        public static CarStallMeta FOUTYFIVE_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 4, true);
+        public static CarStallMeta THIRTY_DEGREE = new CarStallMeta(Math.PI / 6, false);
+        public static CarStallMeta THIRTY_DEGREE_DOUBLE = new CarStallMeta(Math.PI / 6, true);
         public static CarStallMeta ZERO_DEGREE = new CarStallMeta(0, false);
         public static CarStallMeta ZERO_DEGREE_DOUBLE = new CarStallMeta(0, true);
 
@@ -50,19 +52,69 @@ namespace Barnacle
             {
                 requiredConnection = 2;
                 stallCount = 2;
-                double tempW = width;
-                double tempL = length;
-                if (degree == Math.PI)
+            }
+            // double tempW = width; // 2.7
+            // double tempL = length; // 5.3
+            if (degree == Math.PI / 2)
+            {
+                if (isDoubleRow)
                 {
-                    width = length;
+                    requiredConnection = 2;
+                    stallCount = 2;
+                    clearHeight = length * 2;
+                    clearLength = width;
                 }
                 else
                 {
-                    width = Math.Cos(degree) * tempW + Math.Sin(degree) * tempL;
-                    length = Math.Cos(degree) * tempW;
+                    clearHeight = length;
+                    clearLength = width;
                 }
             }
+            else if (degree == 0)
+            {
+                if (isDoubleRow)
+                {
+                    requiredConnection = 2;
+                    stallCount = 2;
+                    clearHeight = width * 2;
+                    clearLength = length;
+                }
+                else
+                {
+                    // default
+                }
+            }
+            else
+            {
+                // (0, 90) degree
+                if (isDoubleRow)
+                {
+                    requiredConnection = 2;
+                    stallCount = 2;
+                    clearHeight = Math.Cos(degree) * width + Math.Sin(degree) * length * 2;
+                    clearLength = width / Math.Sin(degree);
+                }
+                else
+                {
+                    clearLength = width / Math.Sin(degree);
+                    // clearLength = Math.Cos(degree) * tempW + Math.Sin(degree) * tempL; //5.3
+                    clearHeight = Math.Cos(degree) * width + Math.Sin(degree) * width;
+                    // clearHeight = Math.Cos(degree) * tempW; //2.7
+                }
+
+            }
+            
         }
+        public double GetClearHeight()
+        {
+            return clearHeight;
+        }
+
+        public double GetClearLength()
+        {
+            return clearLength;
+        }
+
         public double GetWidth()
         {
             return width;
@@ -83,8 +135,8 @@ namespace Barnacle
             List<GeometryBase> list = new List<GeometryBase>();
             Rectangle3d rec = new Rectangle3d(
                 plane,
-                ZERO_DEGREE.GetWidth(),
-                ZERO_DEGREE.GetLength());
+                ZERO_DEGREE.GetLength(),
+                ZERO_DEGREE.GetWidth());
             Vector3d move = new Vector3d(rec.Center.X - plane.Origin.X ,rec.Center.Y - plane.Origin.Y, rec.Center.Z - plane.Origin.Z);
             move.Reverse();
             rec.Transform(Transform.Translation(move));
@@ -94,14 +146,44 @@ namespace Barnacle
             }
             else
             {
+                // 分裂
                 NurbsCurve stallUp = rec.ToNurbsCurve();
                 NurbsCurve stallDown = rec.ToNurbsCurve();
-                Vector3d vecUp = new Vector3d();
-                Vector3d vecDown;
-                double dist = width / 2;
+                Vector3d vecUp = new Vector3d(vec);
 
-                vecUp.Unitize();
-                vecUp = new Vector3d(vecUp.X * dist, vecUp.Y*dist, vecUp.Z*dist);
+                // 平面几何余弦定理
+                Vector3d a = new Vector3d(rec.Corner(3) - rec.Corner(0));
+                Vector3d b = new Vector3d((rec.Corner(2) - rec.Corner(3)));
+               
+                if (degree == Math.PI / 2)
+                {
+                    vecUp = b / 2;
+                } else if (degree == 0)
+                {
+                    vecUp = a / 2;
+                } else {
+                    b.Unitize();
+                    b = b * (length - width / Math.Tan(degree)); // () is the b length
+                    vecUp = new Vector3d(a + b) / 2;
+                }
+                Vector3d vecDown;
+
+                /*
+                // dist
+                double dist;
+                if (degree == 0)
+                {
+                    dist = width / 2;
+                } else if (degree == Math.PI / 2)
+                {
+                    dist = length / 2;
+                } else
+                {
+                    dist = length * Math.Sin(degree) / 2;
+                }
+                */
+                // vecUp.Unitize();
+                // vecUp = new Vector3d(vecUp.X * dist, vecUp.Y*dist, vecUp.Z*dist);
                 stallUp.Transform(Transform.Translation(vecUp));
                 list.Add(stallUp);
 
@@ -109,6 +191,7 @@ namespace Barnacle
                 vecDown.Reverse();
                 stallDown.Transform(Transform.Translation(vecDown));
                 list.Add(stallDown);
+                
             }
             return list;
             
@@ -147,7 +230,7 @@ namespace Barnacle
         {
 
         }
-        public double GetWidth()
+        public double GetClearHeight()
         {
             return width;
         }

@@ -46,7 +46,7 @@ namespace Barnacle
             {
                 RowNode newNode = new CarStallRow(
                     baseLineID,
-                     zone.OffsetInZone(zone.edges[baseLineID], baseLineID, meta.GetWidth()),
+                     zone.OffsetInZone(zone.edges[baseLineID], baseLineID, meta.GetClearHeight()),
                      meta,
                      zone);
                 branch.Add(newNode);
