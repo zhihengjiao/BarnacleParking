@@ -362,7 +362,7 @@ namespace Barnacle
                 double curValue = cur.CalculateTotalStall();
             }
             // double max = resultRepository.ElementAt(i).CalculateTotalStall();
-            MessageBox.Show(resultRepository.Count().ToString());
+            // MessageBox.Show(resultRepository.Count().ToString());
             RowSolverResult res = resultRepository[n];
             //writeLog(res.endNode);
             return res;

@@ -64,7 +64,7 @@ namespace Barnacle
 
            
             // double max = resultRepository.ElementAt(i).CalculateTotalStall();
-            MessageBox.Show(resultRepository.Count().ToString());
+            // MessageBox.Show(resultRepository.Count().ToString());
             BoundarySolverResult res = resultRepository[n];
             //writeLog(res.endNode);
             return res;

@@ -60,12 +60,10 @@ namespace Barnacle
             while (node != null)
             {
 
-#pragma warning disable CS0184 // 'is' expression's given expression is never of the provided type
-                if (node.GetType() == typeof(CarStallMeta))
-#pragma warning restore CS0184 // 'is' expression's given expression is never of the provided type
+                if (node.name.Equals("CarStallRow"))
                 {
                     CarStallMeta meta = (CarStallMeta)node.metaItem;
-                    res += node.GetLineLength() / meta.GetLength();
+                    res += node.GetLineLength() / meta.GetClearLength();
                 }
 
 
@@ -79,6 +77,7 @@ namespace Barnacle
 
         public override List<GeometryBase> Draw()
         {
+            
             List<GeometryBase> list = new List<GeometryBase>();
             RowNode node = endNode;
             while (node != null)

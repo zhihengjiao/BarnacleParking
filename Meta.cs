@@ -86,7 +86,7 @@ namespace Barnacle
             }
             else
             {
-                // (0, 90) degree
+                // (0, 90) degreezxxzzx
                 if (isDoubleRow)
                 {
                     requiredConnection = 2;
@@ -98,7 +98,7 @@ namespace Barnacle
                 {
                     clearLength = width / Math.Sin(degree);
                     // clearLength = Math.Cos(degree) * tempW + Math.Sin(degree) * tempL; //5.3
-                    clearHeight = Math.Cos(degree) * width + Math.Sin(degree) * width;
+                    clearHeight = Math.Cos(degree) * width + Math.Sin(degree) * length;
                     // clearHeight = Math.Cos(degree) * tempW; //2.7
                 }
 

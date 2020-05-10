@@ -50,6 +50,7 @@ namespace Barnacle
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("result", "res", "Geometry of parking lot", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("measurement", "metric", "Count of parking lot", GH_ParamAccess.item);
             // pManager.AddTextParameter("log", "log", "print of result", GH_ParamAccess.item);
         }
 
@@ -93,6 +94,7 @@ namespace Barnacle
             if (res != null)
             {
                 DA.SetDataList(0, res.GetBest(i).Draw());
+                DA.SetData(1, res.GetBest(i).CalculateTotalStall());
             } else
             {
 

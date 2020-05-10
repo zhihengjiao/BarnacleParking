@@ -18,7 +18,7 @@ namespace Barnacle
         public Line referenceLine;
         public int baseLineID;
         public Zone zone;
-        public static String name;
+        public string name;
 
         public Line highLine;
         public Line lowLine;
