@@ -38,19 +38,24 @@ namespace Barnacle
         {
             if (baseLineID >= this.zone.edges.Length)
             {
+                // Change branch
+                branch.ChangeToInnerLine();
                 resultRepository.Add(branch);
+
+
                 return;
             }
 
-            foreach (CarStallMeta meta in CarStallMeta.META_LIST)
+            foreach (CarStallMeta meta in CarStallMeta.SINGLE_META_LIST)
             {
                 RowNode newNode = new CarStallRow(
                     baseLineID,
-                     zone.OffsetInZone(zone.edges[baseLineID], baseLineID, meta.GetClearHeight()),
+                     zone.OffsetInZone(zone.edges[baseLineID], baseLineID, 0),
                      meta,
                      zone);
                 branch.Add(newNode);
                 Grow(branch.Clone(), baseLineID + 1);
+                branch.RemoveLast();
             }
 
         }

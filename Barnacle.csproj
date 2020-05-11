@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundarySolverResult.cs" />
-    <Compile Include="Main2.cs" />
+    <Compile Include="BoundarySovingMain.cs" />
     <Compile Include="Metric.cs" />
     <Compile Include="BoundarySolver.cs" />
     <Compile Include="RowSolver.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="Solver.cs" />
     <Compile Include="Copy.cs" />
     <Compile Include="Meta.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="RowSolvingMain.cs" />
     <Compile Include="BarnacleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,40 @@ namespace Barnacle
             }
         }
 
+        public void RemoveLast()
+        {
+            this.list.RemoveAt(this.list.Count - 1);
+        }
+
+        public void ChangeToInnerLine()
+        {
+            List<RowNode> replaceList = new List<RowNode>();
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                RowNode node = list[i];
+                // intersect
+                double leftParam;
+                double thisParam;
+                double rightParam;
+                Intersection.LineLine(node.highLine, list[(i + 1) % list.Count].highLine, out leftParam, out thisParam);
+                Intersection.LineLine(node.highLine, list[(i + list.Count - 1) % list.Count].highLine, out rightParam, out thisParam);
+                Line newRefLine = new Line(node.highLine.PointAt(leftParam), node.highLine.PointAt(rightParam));
+                Vector3d moveBack = new Vector3d(node.zone.offsetDirection[i]);
+                moveBack.Reverse();
+                moveBack.Unitize();
+                newRefLine.Transform(Transform.Translation(moveBack * node.metaItem.GetClearHeight()));
+
+                RowNode replaceNode = new CarStallRow(
+                    i,
+                    newRefLine,
+                    (CarStallMeta)node.metaItem,
+                    node.zone
+                    );
+                replaceList.Add(replaceNode);
+            }
+            this.list = replaceList;
+        }
+
         public BoundarySolverResult Clone()
         {
             BoundarySolverResult res = new BoundarySolverResult();
@@ -53,11 +88,30 @@ namespace Barnacle
         {
             List<GeometryBase> list = new List<GeometryBase>();
 
-            foreach (RowNode node in this.list)
+            for (int i = 0; i < this.list.Count; i++)
             {
-                list.Add(node.highLine.ToNurbsCurve());
+                RowNode node = this.list[i];
+                Line innerLine = node.zone.OffsetInZone(node.highLine, i, RoadMeta.NORMAL_ROAD.GetClearHeight());
+                list.Add(innerLine.ToNurbsCurve());
             }
             return list;
+        }
+
+        public double CalculateTotalStall()
+        {
+            double res = 0;
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                RowNode node = this.list[i];
+                if (node.name.Equals("CarStallRow"))
+                {
+                    CarStallMeta meta = (CarStallMeta)node.metaItem;
+                    int multi = meta.IsDouble() ? 2 : 1;
+                    res += (node.GetLineLength() / meta.GetClearLength()) * multi;
+                }
+            }
+
+            return res;
         }
     }
 }

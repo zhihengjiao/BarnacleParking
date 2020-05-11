@@ -11,7 +11,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
-    public class Main : GH_Component
+    public class RowSolvingMain : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -23,7 +23,7 @@ namespace Barnacle
         RowSolver res;
         bool getData = false;
         bool calculation = false;
-        public Main()
+        public RowSolvingMain()
           : base("Barnacle", "Barnacle",
               "Description",
               "Barnacle", "Warppers")

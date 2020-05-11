@@ -11,7 +11,7 @@ using Rhino.Geometry;
 
 namespace Barnacle
 {
-    public class Main2 : GH_Component
+    public class BoundarySovingMain : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -23,7 +23,7 @@ namespace Barnacle
         BoundarySolver res;
         bool getData = false;
         bool calculation = false;
-        public Main2()
+        public BoundarySovingMain()
           : base("BoundaryParking", "Boundary",
               "Description",
               "Barnacle", "Warppers")
@@ -51,7 +51,7 @@ namespace Barnacle
         {
             pManager.AddGenericParameter("result", "res", "Geometry of parking lot", GH_ParamAccess.list);
             pManager.AddGenericParameter("out", "out", "Geometry of offset", GH_ParamAccess.list);
-            // pManager.AddTextParameter("log", "log", "print of result", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Stall Count", "stall count", "count of boundary parking", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -95,6 +95,7 @@ namespace Barnacle
             {
                 DA.SetDataList(0, res.GetBest(i).Draw());
                 DA.SetDataList(1, res.GetBest(i).Out());
+                DA.SetData(2, res.GetBest(i).CalculateTotalStall());
             } else
             {
 

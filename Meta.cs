@@ -44,6 +44,10 @@ namespace Barnacle
              NINETY_DEGREE_DOUBLE, NINETY_DEGREE, SIXTY_DEGREE, SIXTY_DEGREE_DOUBLE, FOUTYFIVE_DEGREE,
         FOUTYFIVE_DEGREE_DOUBLE,  THIRTY_DEGREE, THIRTY_DEGREE_DOUBLE, ZERO_DEGREE, ZERO_DEGREE_DOUBLE};
 
+        public static CarStallMeta[] SINGLE_META_LIST = new CarStallMeta[] {
+             NINETY_DEGREE, SIXTY_DEGREE, FOUTYFIVE_DEGREE,
+        THIRTY_DEGREE, ZERO_DEGREE};
+
         public CarStallMeta(double degree, bool isDoubleRow)
         {
             this.degree = degree;
@@ -223,6 +227,7 @@ namespace Barnacle
     public class RoadMeta : IMeta
     {
         static double width = 7;
+        static double clearHeight = width;
 
         public static RoadMeta NORMAL_ROAD = new RoadMeta();
 
@@ -232,7 +237,7 @@ namespace Barnacle
         }
         public double GetClearHeight()
         {
-            return width;
+            return clearHeight;
         }
 
         public bool IsDouble()

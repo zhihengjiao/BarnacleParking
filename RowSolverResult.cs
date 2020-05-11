@@ -63,7 +63,8 @@ namespace Barnacle
                 if (node.name.Equals("CarStallRow"))
                 {
                     CarStallMeta meta = (CarStallMeta)node.metaItem;
-                    res += node.GetLineLength() / meta.GetClearLength();
+                    int multi = meta.IsDouble() ? 2 : 1;
+                    res += (node.GetLineLength() / meta.GetClearLength()) * multi;
                 }
 
 
