@@ -122,6 +122,14 @@ namespace Barnacle
             {
                 DFS(i);
             }
+            foreach (RowSolverResult cur in resultRepository)
+            {
+                int curValue = cur.CalculateTotalStall();
+            }
+            // double max = resultRepository.ElementAt(i).CalculateTotalStall();
+            // MessageBox.Show(resultRepository.Count().ToString());
+            resultRepository.Sort((a, b) => (b.totalStall - a.totalStall));
+
             return resultRepository;
         }
         
@@ -357,12 +365,7 @@ namespace Barnacle
                 return null;
             }
             
-            foreach (RowSolverResult cur in resultRepository)
-            {
-                double curValue = cur.CalculateTotalStall();
-            }
-            // double max = resultRepository.ElementAt(i).CalculateTotalStall();
-            // MessageBox.Show(resultRepository.Count().ToString());
+            
             RowSolverResult res = resultRepository[n];
             //writeLog(res.endNode);
             return res;

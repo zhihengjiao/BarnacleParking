@@ -95,7 +95,7 @@ namespace Barnacle
             {
                 DA.SetDataList(0, res.GetBest(i).Draw());
                 DA.SetDataList(1, res.GetBest(i).Out());
-                DA.SetData(2, res.GetBest(i).CalculateTotalStall());
+                DA.SetData(2, res.GetBest(i).totalCount);
             } else
             {
 

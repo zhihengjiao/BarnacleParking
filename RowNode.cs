@@ -167,8 +167,8 @@ namespace Barnacle
         public override List<GeometryBase> Draw()
         {
             List<GeometryBase> list = new List<GeometryBase>();
-            list.Add(highLine.ToNurbsCurve());
-            list.Add(lowLine.ToNurbsCurve());
+            //list.Add(highLine.ToNurbsCurve());
+            //list.Add(lowLine.ToNurbsCurve());
             return list;
         }
 

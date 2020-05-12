@@ -12,7 +12,7 @@ namespace Barnacle
     {
 
         public List<RowNode> list;
-        int totalCount = 0;
+        public int totalCount = 0;
 
 
         public BoundarySolverResult() : this(new List<RowNode>())
@@ -97,9 +97,9 @@ namespace Barnacle
             return list;
         }
 
-        public double CalculateTotalStall()
+        public int CalculateTotalStall()
         {
-            double res = 0;
+            int res = 0;
             for (int i = 0; i < this.list.Count; i++)
             {
                 RowNode node = this.list[i];
@@ -107,9 +107,10 @@ namespace Barnacle
                 {
                     CarStallMeta meta = (CarStallMeta)node.metaItem;
                     int multi = meta.IsDouble() ? 2 : 1;
-                    res += (node.GetLineLength() / meta.GetClearLength()) * multi;
+                    res +=  (int) (node.GetLineLength() / meta.GetClearLength()) * multi;
                 }
             }
+            this.totalCount = res;
 
             return res;
         }

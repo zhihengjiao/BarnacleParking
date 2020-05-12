@@ -16,7 +16,7 @@ namespace Barnacle
         // public Metric metric;
         public double totalWidth;
         public RowNode endNode;
-        public double totalStall = 0;
+        public int totalStall = 0;
         public int singleRowNum = 0;
 
         public RowSolverResult() : this(new List<RowNode>())
@@ -53,10 +53,10 @@ namespace Barnacle
             
         }
 
-      public double CalculateTotalStall()
+      public int CalculateTotalStall()
         {
             RowNode node = endNode;
-            double res = 0;
+            int res = 0;
             while (node != null)
             {
 
@@ -64,7 +64,7 @@ namespace Barnacle
                 {
                     CarStallMeta meta = (CarStallMeta)node.metaItem;
                     int multi = meta.IsDouble() ? 2 : 1;
-                    res += (node.GetLineLength() / meta.GetClearLength()) * multi;
+                    res += (int)(node.GetLineLength() / meta.GetClearLength()) * multi;
                 }
 
 

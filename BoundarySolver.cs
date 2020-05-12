@@ -26,10 +26,17 @@ namespace Barnacle
 
         public new List<BoundarySolverResult> Solve()
         {
-
+            
             BoundarySolverResult branch = new BoundarySolverResult();
             Grow(branch, 0);
 
+            foreach (BoundarySolverResult cur in resultRepository)
+            {
+                int curValue = cur.CalculateTotalStall();
+            }
+            // double max = resultRepository.ElementAt(i).CalculateTotalStall();
+            // MessageBox.Show(resultRepository.Count().ToString());
+            resultRepository.Sort((a, b) => (b.totalCount - a.totalCount));
 
             return this.resultRepository;
         }
